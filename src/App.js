@@ -3,11 +3,13 @@ import Tmdb from './Tmdb'
 import './App.css'
 import MovieRow from './components/MovieRow'
 import FeaturedMovie from './components/FeaturedMovie'
+import Header from './components/Header'
 
 export default () => {
 
   const [movieList, setMovieList] = useState([]);
-  const [featuredData, setFeaturedData] = useState([])
+  const [featuredData, setFeaturedData] = useState([]);
+  const [blackHeader, setBlackHeader] = useState(false);
 
   useEffect(()=> {
     //carregar tudo
@@ -32,8 +34,26 @@ export default () => {
     loadAll();
   }, []);
 
+  
+  useEffect(()=>{
+    //monitora a rolagem para remover barra preta da logo (header)
+    const scrollListener = () => {
+      if (window.scrollY > 10){ //caso aja rolagem sumir com a barra
+        setBlackHeader(true)
+      }else{
+        setBlackHeader(false)  
+      }
+    }
+    window.addEventListener('scroll', scrollListener)
+    return()=> {
+      window.removeEventListener('scroll', scrollListener)
+    }
+  }, [])
+
    return (
      <div className="page">
+
+       <Header black={blackHeader} />
 
        {featuredData && //n é loop ent sem key
         <FeaturedMovie item={featuredData} />
@@ -47,6 +67,14 @@ export default () => {
            <MovieRow key={key} title={item.title} items={item.items}/>
          ))}
        </section>
+
+      <footer>
+        Feito com <span role="img" aria-label="raio" >⚡⚡⚡</span> por Emmanuel Stocco<br/>
+        Direitos de Imagem a Netflix <br/>
+        Dados pegos pela API Themoviedb.org
+
+      </footer>
+
      </div>
    )
  }
