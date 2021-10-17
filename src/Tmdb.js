@@ -16,7 +16,7 @@ export default {
     getHomeList: async() =>{
         return[
           {
-              slug: 'originais',
+              slug: 'originals',
               title: 'Originais do netflix',
               items: await basicFetch(`/discover/tv?with_network=213&language=pt-BR&api_key=${API_KEY}`) //passando o parametro endpoint)
           },
@@ -56,5 +56,28 @@ export default {
             items: await basicFetch(`/discover/movie?with_genres=99&language=pt-BR&api_key=${API_KEY}`)
            },
         ];
+    },
+    //lidando com api para pegar filme ou serie espcifica dados para exibição de capa
+    getMovieInfo: async (movieID, type ) => {
+        let info = {};
+
+        if(movieID){
+            switch(type) {
+                //filmes
+                case 'movie':
+                    info = await basicFetch(`/movie/${movieID}?language=pt-BR&api_key=${API_KEY}`)
+                 break;
+
+                 //seriado
+                 case 'tv':
+                    info = await basicFetch(`/tv/${movieID}?language=pt-BR&api_key=${API_KEY}`)
+                 break;
+                 default:
+                     info=null;
+                     break;
+            }
+        }
+
+        return info;
     }
 }
